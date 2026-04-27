@@ -5,12 +5,23 @@ import { farmsApi, predictionsApi } from "@/lib/api";
 import type { DashboardStats, PredictionResult, Farm } from "@/lib/types";
 import { formatPKR, formatNumber, formatDate, verdictBg } from "@/lib/utils";
 import {
-  Bird, TrendingUp, Activity, FlaskConical,
-  PlusCircle, ArrowRight, AlertCircle,
+  Bird,
+  TrendingUp,
+  Activity,
+  FlaskConical,
+  PlusCircle,
+  ArrowRight,
+  AlertCircle,
 } from "lucide-react";
 import Link from "next/link";
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
 } from "recharts";
 
 export default function DashboardPage() {
@@ -32,7 +43,9 @@ export default function DashboardPage() {
         setFarms(f.slice(0, 5));
         setPredictions(p.slice(0, 6));
       } catch {
-        setError("Could not connect to the API. Make sure the backend is running.");
+        setError(
+          "Could not connect to the API. Make sure the backend is running.",
+        );
       } finally {
         setLoading(false);
       }
@@ -58,7 +71,9 @@ export default function DashboardPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="page-title">Dashboard</h1>
-          <p className="text-gray-500 text-sm mt-0.5">AI-Powered Broiler Farm Management</p>
+          <p className="text-gray-500 text-sm mt-0.5">
+            AI-Powered Broiler Farm Management
+          </p>
         </div>
         <Link href="/farms/new" className="btn-primary flex items-center gap-2">
           <PlusCircle size={16} /> New Batch
@@ -73,9 +88,27 @@ export default function DashboardPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard icon={<Bird className="text-primary-600" />} label="Active Farms" value={stats?.active_farms ?? 0} sub="batches running" bg="bg-primary-50" />
-        <StatCard icon={<Activity className="text-blue-600" />} label="Total Chicks" value={formatNumber(stats?.total_active_chicks ?? 0)} sub="in active batches" bg="bg-blue-50" />
-        <StatCard icon={<FlaskConical className="text-purple-600" />} label="Predictions Run" value={stats?.total_predictions ?? 0} sub="all time" bg="bg-purple-50" />
+        <StatCard
+          icon={<Bird className="text-primary-600" />}
+          label="Active Farms"
+          value={stats?.active_farms ?? 0}
+          sub="batches running"
+          bg="bg-primary-50"
+        />
+        <StatCard
+          icon={<Activity className="text-blue-600" />}
+          label="Total Chicks"
+          value={formatNumber(stats?.total_active_chicks ?? 0)}
+          sub="in active batches"
+          bg="bg-blue-50"
+        />
+        <StatCard
+          icon={<FlaskConical className="text-purple-600" />}
+          label="Predictions Run"
+          value={stats?.total_predictions ?? 0}
+          sub="all time"
+          bg="bg-purple-50"
+        />
         <StatCard
           icon={<TrendingUp className="text-green-600" />}
           label="Avg Predicted Profit"
@@ -96,15 +129,34 @@ export default function DashboardPage() {
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={chartData} barCategoryGap="30%">
                 <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-                <YAxis tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} tick={{ fontSize: 11 }} />
-                <Tooltip
-                  formatter={(val: number, name: string) => [formatPKR(val), name.charAt(0).toUpperCase() + name.slice(1)]}
+                <YAxis
+                  tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`}
+                  tick={{ fontSize: 11 }}
                 />
-                <Bar dataKey="revenue" fill="#86efac" radius={[4, 4, 0, 0]} name="Revenue" />
-                <Bar dataKey="cost" fill="#fca5a5" radius={[4, 4, 0, 0]} name="Cost" />
+                <Tooltip
+                  formatter={(val: number, name: string) => [
+                    formatPKR(val),
+                    name.charAt(0).toUpperCase() + name.slice(1),
+                  ]}
+                />
+                <Bar
+                  dataKey="revenue"
+                  fill="#86efac"
+                  radius={[4, 4, 0, 0]}
+                  name="Revenue"
+                />
+                <Bar
+                  dataKey="cost"
+                  fill="#fca5a5"
+                  radius={[4, 4, 0, 0]}
+                  name="Cost"
+                />
                 <Bar dataKey="profit" radius={[4, 4, 0, 0]} name="Profit">
                   {chartData.map((entry, i) => (
-                    <Cell key={i} fill={entry.profit >= 0 ? "#16a34a" : "#dc2626"} />
+                    <Cell
+                      key={i}
+                      fill={entry.profit >= 0 ? "#16a34a" : "#dc2626"}
+                    />
                   ))}
                 </Bar>
               </BarChart>
@@ -116,7 +168,10 @@ export default function DashboardPage() {
         <div className="card p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="section-title">Active Batches</h2>
-            <Link href="/farms" className="text-primary-600 text-sm flex items-center gap-1 hover:underline">
+            <Link
+              href="/farms"
+              className="text-primary-600 text-sm flex items-center gap-1 hover:underline"
+            >
               View all <ArrowRight size={14} />
             </Link>
           </div>
@@ -125,12 +180,21 @@ export default function DashboardPage() {
           ) : (
             <ul className="space-y-3">
               {farms.map((f) => (
-                <li key={f.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+                <li
+                  key={f.id}
+                  className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0"
+                >
                   <div>
                     <p className="font-medium text-sm">{f.farm_name}</p>
-                    <p className="text-xs text-gray-500">{formatNumber(f.num_chicks)} chicks · Started {formatDate(f.batch_start_date)}</p>
+                    <p className="text-xs text-gray-500">
+                      {formatNumber(f.num_chicks)} chicks · Started{" "}
+                      {formatDate(f.batch_start_date)}
+                    </p>
                   </div>
-                  <Link href={`/farms/${f.id}`} className="text-primary-600 text-xs hover:underline">
+                  <Link
+                    href={`/farms/${f.id}`}
+                    className="text-primary-600 text-xs hover:underline"
+                  >
                     View
                   </Link>
                 </li>
@@ -144,7 +208,10 @@ export default function DashboardPage() {
       <div className="card p-5">
         <div className="flex items-center justify-between mb-4">
           <h2 className="section-title">Recent Predictions</h2>
-          <Link href="/history" className="text-primary-600 text-sm flex items-center gap-1 hover:underline">
+          <Link
+            href="/history"
+            className="text-primary-600 text-sm flex items-center gap-1 hover:underline"
+          >
             Full history <ArrowRight size={14} />
           </Link>
         </div>
@@ -165,19 +232,30 @@ export default function DashboardPage() {
               </thead>
               <tbody>
                 {predictions.map((p) => (
-                  <tr key={p.id} className="border-b border-gray-50 hover:bg-gray-50">
+                  <tr
+                    key={p.id}
+                    className="border-b border-gray-50 hover:bg-gray-50"
+                  >
                     <td className="py-2">{formatNumber(p.num_chicks)}</td>
-                    <td className="py-2">{formatPKR(p.cost_breakdown.total_cost)}</td>
+                    <td className="py-2">
+                      {formatPKR(p.cost_breakdown.total_cost)}
+                    </td>
                     <td className="py-2">{formatPKR(p.total_revenue)}</td>
-                    <td className={`py-2 font-semibold ${p.predicted_profit >= 0 ? "text-green-600" : "text-red-600"}`}>
+                    <td
+                      className={`py-2 font-semibold ${p.predicted_profit >= 0 ? "text-green-600" : "text-red-600"}`}
+                    >
                       {formatPKR(p.predicted_profit)}
                     </td>
                     <td className="py-2">
-                      <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${verdictBg(p.verdict)}`}>
+                      <span
+                        className={`text-xs px-2 py-0.5 rounded-full border font-medium ${verdictBg(p.verdict)}`}
+                      >
                         {p.verdict}
                       </span>
                     </td>
-                    <td className="py-2 text-gray-500">{formatDate(p.created_at)}</td>
+                    <td className="py-2 text-gray-500">
+                      {formatDate(p.created_at)}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -189,12 +267,24 @@ export default function DashboardPage() {
   );
 }
 
-function StatCard({ icon, label, value, sub, bg }: {
-  icon: React.ReactNode; label: string; value: string | number; sub: string; bg: string;
+function StatCard({
+  icon,
+  label,
+  value,
+  sub,
+  bg,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string | number;
+  sub: string;
+  bg: string;
 }) {
   return (
     <div className="card p-4 flex items-start gap-3">
-      <div className={`w-10 h-10 ${bg} rounded-lg flex items-center justify-center flex-shrink-0`}>
+      <div
+        className={`w-10 h-10 ${bg} rounded-lg flex items-center justify-center flex-shrink-0`}
+      >
         {icon}
       </div>
       <div>

@@ -22,10 +22,12 @@ export default function FarmsPage() {
     setLoading(false);
   };
 
-  useEffect(() => { load(); }, [status]);
+  useEffect(() => {
+    load();
+  }, [status]);
 
   const filtered = farms.filter((f) =>
-    f.farm_name.toLowerCase().includes(search.toLowerCase())
+    f.farm_name.toLowerCase().includes(search.toLowerCase()),
   );
 
   const handleDelete = async (id: string) => {
@@ -37,7 +39,9 @@ export default function FarmsPage() {
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-5">
       <div className="flex items-center justify-between">
-        <h1 className="page-title flex items-center gap-2"><Bird size={24} className="text-primary-600" /> Farm Batches</h1>
+        <h1 className="page-title flex items-center gap-2">
+          <Bird size={24} className="text-primary-600" /> Farm Batches
+        </h1>
         <Link href="/farms/new" className="btn-primary flex items-center gap-2">
           <PlusCircle size={16} /> New Batch
         </Link>
@@ -46,7 +50,10 @@ export default function FarmsPage() {
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <Search
+            size={15}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+          />
           <input
             className="input pl-9"
             placeholder="Search by farm name..."
@@ -60,7 +67,9 @@ export default function FarmsPage() {
               key={tab}
               onClick={() => setStatus(tab)}
               className={`px-3 py-1.5 rounded-md text-sm font-medium capitalize transition-colors ${
-                status === tab ? "bg-white text-primary-700 shadow-sm" : "text-gray-500 hover:text-gray-700"
+                status === tab
+                  ? "bg-white text-primary-700 shadow-sm"
+                  : "text-gray-500 hover:text-gray-700"
               }`}
             >
               {tab}
@@ -79,7 +88,10 @@ export default function FarmsPage() {
           <div className="p-12 text-center text-gray-400">
             <Bird size={40} className="mx-auto mb-3 opacity-30" />
             <p>No farm batches found.</p>
-            <Link href="/farms/new" className="text-primary-600 text-sm hover:underline mt-2 inline-block">
+            <Link
+              href="/farms/new"
+              className="text-primary-600 text-sm hover:underline mt-2 inline-block"
+            >
               Create your first batch →
             </Link>
           </div>
@@ -100,19 +112,35 @@ export default function FarmsPage() {
               <tbody className="divide-y divide-gray-100">
                 {filtered.map((f) => (
                   <tr key={f.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-3 font-medium text-gray-900">{f.farm_name}</td>
-                    <td className="px-4 py-3 text-gray-600">{formatNumber(f.num_chicks)}</td>
-                    <td className="px-4 py-3 text-gray-600">{formatDate(f.batch_start_date)}</td>
-                    <td className="px-4 py-3 text-gray-600">{f.expected_duration_days}d</td>
-                    <td className="px-4 py-3 text-gray-600">{formatPKR(f.expected_selling_price_per_kg)}</td>
+                    <td className="px-4 py-3 font-medium text-gray-900">
+                      {f.farm_name}
+                    </td>
+                    <td className="px-4 py-3 text-gray-600">
+                      {formatNumber(f.num_chicks)}
+                    </td>
+                    <td className="px-4 py-3 text-gray-600">
+                      {formatDate(f.batch_start_date)}
+                    </td>
+                    <td className="px-4 py-3 text-gray-600">
+                      {f.expected_duration_days}d
+                    </td>
+                    <td className="px-4 py-3 text-gray-600">
+                      {formatPKR(f.expected_selling_price_per_kg)}
+                    </td>
                     <td className="px-4 py-3">
                       <StatusBadge status={f.status} />
                     </td>
                     <td className="px-4 py-3 flex items-center gap-2">
-                      <Link href={`/farms/${f.id}`} className="p-1.5 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded transition-colors">
+                      <Link
+                        href={`/farms/${f.id}`}
+                        className="p-1.5 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded transition-colors"
+                      >
                         <Eye size={15} />
                       </Link>
-                      <button onClick={() => handleDelete(f.id)} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors">
+                      <button
+                        onClick={() => handleDelete(f.id)}
+                        className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                      >
                         <Trash2 size={15} />
                       </button>
                     </td>
@@ -129,12 +157,14 @@ export default function FarmsPage() {
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, string> = {
-    active:    "bg-green-100 text-green-700",
+    active: "bg-green-100 text-green-700",
     completed: "bg-blue-100 text-blue-700",
-    archived:  "bg-gray-100 text-gray-600",
+    archived: "bg-gray-100 text-gray-600",
   };
   return (
-    <span className={`text-xs px-2 py-0.5 rounded-full font-medium capitalize ${map[status] ?? "bg-gray-100"}`}>
+    <span
+      className={`text-xs px-2 py-0.5 rounded-full font-medium capitalize ${map[status] ?? "bg-gray-100"}`}
+    >
       {status}
     </span>
   );

@@ -6,8 +6,14 @@ import type { PredictionResult } from "@/lib/types";
 import { formatPKR, formatNumber, formatDate, verdictBg } from "@/lib/utils";
 import { ClipboardList, Trash2, TrendingUp, TrendingDown } from "lucide-react";
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer, ReferenceLine,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  ReferenceLine,
 } from "recharts";
 
 export default function HistoryPage() {
@@ -22,7 +28,9 @@ export default function HistoryPage() {
     setLoading(false);
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, []);
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this prediction record?")) return;
@@ -42,7 +50,8 @@ export default function HistoryPage() {
   const profitable = predictions.filter((p) => p.predicted_profit > 0).length;
   const loss = predictions.filter((p) => p.predicted_profit < 0).length;
   const avgProfit = predictions.length
-    ? predictions.reduce((s, p) => s + p.predicted_profit, 0) / predictions.length
+    ? predictions.reduce((s, p) => s + p.predicted_profit, 0) /
+      predictions.length
     : 0;
 
   if (loading) return <Loader />;
@@ -51,18 +60,39 @@ export default function HistoryPage() {
     <div className="p-6 max-w-6xl mx-auto space-y-6">
       <div>
         <h1 className="page-title flex items-center gap-2">
-          <ClipboardList size={24} className="text-primary-600" /> Prediction History
+          <ClipboardList size={24} className="text-primary-600" /> Prediction
+          History
         </h1>
-        <p className="text-gray-500 text-sm mt-0.5">All past profit/loss predictions</p>
+        <p className="text-gray-500 text-sm mt-0.5">
+          All past profit/loss predictions
+        </p>
       </div>
 
       {/* Summary row */}
       {predictions.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <SummaryCard label="Total Predictions" value={predictions.length} color="text-gray-800" />
-          <SummaryCard label="Profitable" value={profitable} color="text-green-600" icon={<TrendingUp size={14} />} />
-          <SummaryCard label="Loss Predictions" value={loss} color="text-red-600" icon={<TrendingDown size={14} />} />
-          <SummaryCard label="Avg Profit" value={formatPKR(avgProfit)} color={avgProfit >= 0 ? "text-green-600" : "text-red-600"} />
+          <SummaryCard
+            label="Total Predictions"
+            value={predictions.length}
+            color="text-gray-800"
+          />
+          <SummaryCard
+            label="Profitable"
+            value={profitable}
+            color="text-green-600"
+            icon={<TrendingUp size={14} />}
+          />
+          <SummaryCard
+            label="Loss Predictions"
+            value={loss}
+            color="text-red-600"
+            icon={<TrendingDown size={14} />}
+          />
+          <SummaryCard
+            label="Avg Profit"
+            value={formatPKR(avgProfit)}
+            color={avgProfit >= 0 ? "text-green-600" : "text-red-600"}
+          />
         </div>
       )}
 
@@ -73,13 +103,48 @@ export default function HistoryPage() {
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="index" tick={{ fontSize: 11 }} label={{ value: "Prediction #", position: "insideBottom", offset: -2, fontSize: 11 }} />
-              <YAxis tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} tick={{ fontSize: 11 }} />
+              <XAxis
+                dataKey="index"
+                tick={{ fontSize: 11 }}
+                label={{
+                  value: "Prediction #",
+                  position: "insideBottom",
+                  offset: -2,
+                  fontSize: 11,
+                }}
+              />
+              <YAxis
+                tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`}
+                tick={{ fontSize: 11 }}
+              />
               <Tooltip formatter={(v: number) => formatPKR(v)} />
               <ReferenceLine y={0} stroke="#dc2626" strokeDasharray="4 4" />
-              <Line type="monotone" dataKey="profit" stroke="#16a34a" strokeWidth={2} dot={{ r: 3 }} name="Profit" />
-              <Line type="monotone" dataKey="revenue" stroke="#60a5fa" strokeWidth={1.5} dot={false} name="Revenue" strokeDasharray="4 2" />
-              <Line type="monotone" dataKey="cost" stroke="#f87171" strokeWidth={1.5} dot={false} name="Cost" strokeDasharray="4 2" />
+              <Line
+                type="monotone"
+                dataKey="profit"
+                stroke="#16a34a"
+                strokeWidth={2}
+                dot={{ r: 3 }}
+                name="Profit"
+              />
+              <Line
+                type="monotone"
+                dataKey="revenue"
+                stroke="#60a5fa"
+                strokeWidth={1.5}
+                dot={false}
+                name="Revenue"
+                strokeDasharray="4 2"
+              />
+              <Line
+                type="monotone"
+                dataKey="cost"
+                stroke="#f87171"
+                strokeWidth={1.5}
+                dot={false}
+                name="Cost"
+                strokeDasharray="4 2"
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -112,21 +177,33 @@ export default function HistoryPage() {
                 {predictions.map((p) => (
                   <tr key={p.id} className="hover:bg-gray-50">
                     <td className="px-4 py-3">{formatNumber(p.num_chicks)}</td>
-                    <td className="px-4 py-3 text-red-600">{formatPKR(p.cost_breakdown.total_cost)}</td>
-                    <td className="px-4 py-3 text-blue-600">{formatPKR(p.total_revenue)}</td>
-                    <td className={`px-4 py-3 font-semibold ${p.predicted_profit >= 0 ? "text-green-600" : "text-red-600"}`}>
+                    <td className="px-4 py-3 text-red-600">
+                      {formatPKR(p.cost_breakdown.total_cost)}
+                    </td>
+                    <td className="px-4 py-3 text-blue-600">
+                      {formatPKR(p.total_revenue)}
+                    </td>
+                    <td
+                      className={`px-4 py-3 font-semibold ${p.predicted_profit >= 0 ? "text-green-600" : "text-red-600"}`}
+                    >
                       {formatPKR(p.predicted_profit)}
                     </td>
-                    <td className={`px-4 py-3 ${p.ml_predicted_profit >= 0 ? "text-green-600" : "text-red-600"}`}>
+                    <td
+                      className={`px-4 py-3 ${p.ml_predicted_profit >= 0 ? "text-green-600" : "text-red-600"}`}
+                    >
                       {formatPKR(p.ml_predicted_profit)}
                     </td>
                     <td className="px-4 py-3">{p.roi_percent}%</td>
                     <td className="px-4 py-3">
-                      <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${verdictBg(p.verdict)}`}>
+                      <span
+                        className={`text-xs px-2 py-0.5 rounded-full border font-medium ${verdictBg(p.verdict)}`}
+                      >
                         {p.verdict}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-gray-500">{formatDate(p.created_at)}</td>
+                    <td className="px-4 py-3 text-gray-500">
+                      {formatDate(p.created_at)}
+                    </td>
                     <td className="px-4 py-3">
                       <button
                         onClick={() => handleDelete(p.id!)}
@@ -147,10 +224,23 @@ export default function HistoryPage() {
   );
 }
 
-function SummaryCard({ label, value, color, icon }: { label: string; value: string | number; color: string; icon?: React.ReactNode }) {
+function SummaryCard({
+  label,
+  value,
+  color,
+  icon,
+}: {
+  label: string;
+  value: string | number;
+  color: string;
+  icon?: React.ReactNode;
+}) {
   return (
     <div className="card p-4">
-      <p className="text-xs text-gray-500 mb-1 flex items-center gap-1">{icon}{label}</p>
+      <p className="text-xs text-gray-500 mb-1 flex items-center gap-1">
+        {icon}
+        {label}
+      </p>
       <p className={`text-xl font-bold ${color}`}>{value}</p>
     </div>
   );

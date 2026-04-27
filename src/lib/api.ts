@@ -44,7 +44,9 @@ export const predictionsApi = {
     api.post("/predictions", data).then((r) => r.data),
 
   list: (farmId?: string): Promise<PredictionResult[]> =>
-    api.get("/predictions", { params: farmId ? { farm_id: farmId } : {} }).then((r) => r.data),
+    api
+      .get("/predictions", { params: farmId ? { farm_id: farmId } : {} })
+      .then((r) => r.data),
 
   get: (id: string): Promise<PredictionResult> =>
     api.get(`/predictions/${id}`).then((r) => r.data),
@@ -52,7 +54,9 @@ export const predictionsApi = {
   delete: (id: string): Promise<{ message: string }> =>
     api.delete(`/predictions/${id}`).then((r) => r.data),
 
-  logMortality: (data: Omit<MortalityLog, "id" | "created_at">): Promise<MortalityLog> =>
+  logMortality: (
+    data: Omit<MortalityLog, "id" | "created_at">,
+  ): Promise<MortalityLog> =>
     api.post("/predictions/mortality", data).then((r) => r.data),
 
   getMortalityLogs: (farmId: string): Promise<MortalityLog[]> =>
