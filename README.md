@@ -19,7 +19,7 @@ A full-stack AI-powered web application for broiler poultry farmers to predict p
 ## Project Structure
 
 ```
-AI-Poultryfrom/
+AI-Poultryfrom:
 ├── frontend/                  # Next.js 14 App
 │   └── src/
 │       ├── app/
