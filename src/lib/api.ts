@@ -17,6 +17,30 @@ const api = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
+// ── Auth interceptor ──────────────────────────────────────────────
+// ClerkAuthProvider calls setTokenGetter() on mount with Clerk's getToken fn.
+// Every outgoing request then attaches the Bearer token automatically.
+let _getToken: (() => Promise<string | null>) | null = null;
+
+export function setTokenGetter(fn: () => Promise<string | null>) {
+  _getToken = fn;
+}
+
+api.interceptors.request.use(async (config) => {
+  if (_getToken) {
+    try {
+      const token = await _getToken();
+      if (token) {
+        config.headers = config.headers ?? {};
+        config.headers["Authorization"] = `Bearer ${token}`;
+      }
+    } catch {
+      // If token fetch fails, let the request go through — the server will 401
+    }
+  }
+  return config;
+});
+
 // ── Farms ─────────────────────────────────────────────────────────
 export const farmsApi = {
   list: (status?: string): Promise<Farm[]> =>

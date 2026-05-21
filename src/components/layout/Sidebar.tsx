@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { UserButton, useUser } from "@clerk/nextjs";
 import {
   LayoutDashboard,
   BrainCircuit,
@@ -25,6 +26,12 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { user } = useUser();
+
+  // Hide sidebar on auth pages
+  if (pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up")) {
+    return null;
+  }
 
   return (
     <aside className="w-60 flex-shrink-0 bg-primary-800 text-white flex flex-col h-full">
@@ -65,10 +72,28 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* Footer */}
+      {/* User section */}
       <div className="px-4 py-4 border-t border-primary-700">
-        <p className="text-primary-400 text-xs">FYP — Broiler Poultry AI</p>
-        <p className="text-primary-500 text-xs">v1.0.0</p>
+        <div className="flex items-center gap-3 mb-3">
+          {/* Clerk UserButton: avatar + dropdown with sign-out, profile, etc. */}
+          <UserButton
+            afterSignOutUrl="/sign-in"
+            appearance={{
+              elements: {
+                avatarBox: "w-8 h-8",
+              },
+            }}
+          />
+          <div className="min-w-0">
+            <p className="text-white text-xs font-medium truncate">
+              {user?.firstName ?? user?.emailAddresses?.[0]?.emailAddress ?? "User"}
+            </p>
+            <p className="text-primary-400 text-xs truncate">
+              {user?.emailAddresses?.[0]?.emailAddress ?? ""}
+            </p>
+          </div>
+        </div>
+        <p className="text-primary-500 text-xs">FYP — Broiler Poultry AI · v1.0.0</p>
       </div>
     </aside>
   );
