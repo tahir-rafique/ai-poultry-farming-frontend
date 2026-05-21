@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getToken } from "./auth";
 import type {
   Farm,
   FarmCreate,
@@ -16,6 +17,61 @@ const api = axios.create({
   baseURL: `${API_BASE}/api/v1`,
   headers: { "Content-Type": "application/json" },
 });
+
+// ── Auth interceptor ──────────────────────────────────────────────
+// Attaches the JWT from localStorage to every outgoing request.
+api.interceptors.request.use((config) => {
+  const token = getToken();
+  if (token) {
+    config.headers = config.headers ?? {};
+    config.headers["Authorization"] = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// ── Auth ──────────────────────────────────────────────────────────
+export interface RegisterData {
+  name: string;
+  email: string;
+  password: string;
+  phone?: string;
+  farm_name?: string;
+}
+
+export interface LoginData {
+  email: string;
+  password: string;
+}
+
+export interface AuthResponse {
+  access_token: string;
+  token_type: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    phone?: string | null;
+    farm_name?: string | null;
+    created_at: string;
+  };
+}
+
+export const authApi = {
+  register: (data: RegisterData): Promise<AuthResponse> =>
+    api.post("/auth/register", data).then((r) => r.data),
+
+  login: (data: LoginData): Promise<AuthResponse> =>
+    api.post("/auth/login", data).then((r) => r.data),
+
+  me: (): Promise<AuthResponse["user"]> =>
+    api.get("/auth/me").then((r) => r.data),
+
+  forgotPassword: (email: string): Promise<{ message: string }> =>
+    api.post("/auth/forgot-password", { email }).then((r) => r.data),
+
+  resetPassword: (token: string, new_password: string): Promise<{ message: string }> =>
+    api.post("/auth/reset-password", { token, new_password }).then((r) => r.data),
+};
 
 // ── Farms ─────────────────────────────────────────────────────────
 export const farmsApi = {
