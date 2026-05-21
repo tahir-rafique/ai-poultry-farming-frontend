@@ -9,16 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
-<<<<<<< HEAD
     "@clerk/nextjs": "^5.0.0",
     "@clerk/shared": "^4.12.2",
     "axios": "^1.7.2",
     "clsx": "^2.1.1",
     "lucide-react": "^0.383.0",
-    "next": "14.2.3",
-=======
     "next": "14.2.35",
->>>>>>> a4949e9f7d2184b1934fe1c0a112231c95bc2788
     "react": "^18",
     "react-dom": "^18",
     "recharts": "^2.12.7"
